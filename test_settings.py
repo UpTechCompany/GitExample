@@ -15,9 +15,16 @@ class test_settings(unittest.TestCase):
         assert manager1.unique_number == manager2.unique_number
 
     def test_check_json(self):
+        # Создание экземпляра класса
         man = settings_maneger()
+
+        # Неправильный путь к файлу и проба на считывание
+        file_name = "lo/other_dir/settings.json"
+        man.opener(file_name)
+        print(man.data)
+
+        # Путь к файлу и проба на считывание
         file_name = "settings.json"
         man.opener(file_name)
-        man.convert()
         print(man.data)
 
