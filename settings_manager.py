@@ -3,7 +3,7 @@ import json
 import uuid
 from settings import settings
 
-class settings_maneger(object):
+class settings_manager(object):
     __file_name = "settings.json"
     __unique_number = 1
     __data = {}
@@ -12,7 +12,7 @@ class settings_maneger(object):
     # Функция для создания экземляра класса и контроль, того, что у нас он будет только один
     def __new__(cls):
         if not hasattr(cls, 'instance'):
-            cls.instance = super(settings_maneger, cls).__new__(cls)
+            cls.instance = super(settings_manager, cls).__new__(cls)
         return cls.instance
 
 
@@ -85,4 +85,5 @@ class settings_maneger(object):
         with open(settings_file, "r") as read_file:
             self.__data = json.load(read_file)
             self.__convert()
+            print(self.__data)
 
