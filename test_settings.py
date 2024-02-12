@@ -7,6 +7,7 @@ class TestSettings(unittest.TestCase):
     def test_check_create_manager(self):
         manager1 = settings_manager()
         manager2 = settings_manager()
+        #norm
 
         self.assertEqual(manager1.unique_number, manager2.unique_number)
 
