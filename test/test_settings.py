@@ -1,6 +1,6 @@
 import unittest
-from settings import settings
-from settings_manager import settings_manager
+from src.settings import settings
+from src.settings_manager import settings_manager
 
 class TestSettings(unittest.TestCase):
 
@@ -24,7 +24,7 @@ class TestSettings(unittest.TestCase):
         man = settings_manager()
 
         # Путь к файлу и проба на считывание
-        file_name = "settings.json"
+        file_name = "../res/settings.json"
         self.assertFalse(man.opener(file_name))
         self.assertNotEqual(man.data, {})
 

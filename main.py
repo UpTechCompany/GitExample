@@ -1,3 +1,0 @@
-from test_settings import test_settings
-
-test_settings.test_check_create_manager()

@@ -4,7 +4,7 @@ import uuid
 from settings import settings
 
 class settings_manager(object):
-    __file_name = "settings.json"
+    __file_name = "../res/settings.json"
     __unique_number = 1
     __data = {}
     __settings = settings()
