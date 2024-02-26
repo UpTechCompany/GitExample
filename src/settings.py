@@ -1,94 +1,87 @@
-
-
+from errors import error_proxy
 class settings:
-    __INN = ""
-    __check = ""
-    __korr_check = ""
-    __BIK = ""
-    __name_of_product = ""
-    __name_of_company = ""
+    def __init__(self):
+        self.__name = ""
+        self.__inn = ""
+        self.__check = ""
+        self.__corr_check = ""
+        self.__bik = ""
+        self.__type_of_company = ""
+        self.__first_start = True
 
-    # Свойство для получения имен полей класса
     @property
-    def get_data_keys(self):
-        return ['INN', 'check', 'korr_check', 'BIK', 'name_of_product', 'name_of_company']
+    def name(self):
+        return self.__name
 
-    #Свойство для получения поля BIK
-    @property
-    def BIK(self):
-        return self.__BIK
+    @name.setter
+    def name(self, value: str):
+        if not isinstance(value.strip(), str):
+            error_proxy.set_error(Exception("Некорректное наименование!"))
 
-    # Свойство для получения поля check
+        self.__name = value.strip()
+
     @property
-    def check(self):
+    def inn(self):
+        return self.__inn
+
+    @inn.setter
+    def inn(self, value: str):
+        if not isinstance(value.strip(), str) or len(value.strip()) != 12:
+            error_proxy.set_error(Exception("Некорректный ИНН!"))
+
+        self.__inn = value.strip()
+
+    @property
+    def account(self):
         return self.__check
 
-    # Свойство для получения поля korr_check
-    @property
-    def korr_check(self):
-        return self.__korr_check
-
-    # Свойство для получения поля INN
-    @property
-    def INN(self):
-        return self.__INN
-
-    # Свойство для получения поля name_of_product
-    @property
-    def name_of_product(self):
-        return self.__name_of_product
-
-    # Свойство для получения поля name_of_company
-    @property
-    def name_of_company(self):
-        return self.__name_of_company
-
-    # Сеттер для изменения значения поля BIK
-    @BIK.setter
-    def BIK(self, value: str):
-        if not isinstance(value, str) and len(value) == 9 and value.isnumeric():
-            raise Exception("Некорректный аргумент!")
-
-        self.__BIK = value.strip()
-
-    # Сеттер для изменения значения поля check
-    @check.setter
-    def check(self, value: str):
-        if not isinstance(value, str) and len(value) == 11 and value.isnumeric():
-            raise Exception("Некорректный аргумент!")
+    @account.setter
+    def account(self, value: str):
+        if not isinstance(value.strip(), str) or len(value.strip()) != 11:
+            error_proxy.set_error(Exception("Некорректный счет!"))
 
         self.__check = value.strip()
 
-    # Сеттер для изменения значения поля corr_check
-    @korr_check.setter
-    def korr_check(self, value: str):
-        if not isinstance(value, str) and len(value) == 11 and value.isnumeric():
-            raise Exception("Некорректный аргумент!")
+    @property
+    def correspondent_account(self):
+        return self.__corr_check
 
-        self.__korr_check = value.strip()
+    @correspondent_account.setter
+    def correspondent_account(self, value: str):
+        if not isinstance(value.strip(), str) or len(value.strip()) != 11:
+            error_proxy.set_error(Exception("Некорректный корреспондентский счет!"))
 
-    # Сеттер для изменения значения поля INN
-    @INN.setter
-    def INN(self, value: str):
-        if not isinstance(value, str) and len(value) == 12 and value.isnumeric():
-            raise Exception("Некорректный аргумент!")
+        self.__corr_check = value.strip()
 
-        self.__INN = value.strip()
+    @property
+    def bik(self):
+        return self.__bik
 
-    # Сеттер для изменения значения поля name_of_product
-    @name_of_product.setter
-    def name_of_product(self, value: str):
-        if not isinstance(value, str):
-            raise Exception("Некорректный аргумент!")
+    @bik.setter
+    def bik(self, value: str):
+        if not isinstance(value.strip(), str) or len(value.strip()) != 9:
+            error_proxy.set_error(Exception("Некорректный БИК!"))
 
-        self.__name_of_product = value.strip()
+        self.__bik = value.strip()
 
-    # Сеттер для изменения значения поля name_of_company
-    @name_of_company.setter
-    def name_of_company(self, value: str):
-        if not isinstance(value, str) and len(value) == 5:
-            raise Exception("Некорректный аргумент!")
+    @property
+    def ownership_type(self):
+        return self.__type_of_company
 
-        self.__name_of_company = value.strip()
-        
-        
+    @ownership_type.setter
+    def ownership_type(self, value: str):
+        if not isinstance(value.strip(), str) or len(value.strip()) != 5:
+            error_proxy.set_error(Exception("Некорректный вид собственности!"))
+
+        self.__type_of_company = value.strip()
+
+    @property
+    def is_first_start(self):
+        """
+           Флаг Первый старт
+        """
+        return self._first_start
+
+    @is_first_start.setter
+    def is_first_start(self, value: bool):
+        self._first_start = value
