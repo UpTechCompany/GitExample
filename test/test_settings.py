@@ -1,8 +1,45 @@
 import unittest
+from models.nomenclature import nomenclature_model
+from models.recipt import recipt_model
 from src.settings import settings
 from src.settings_manager import settings_manager
+from models.unit import unit_model
+from storage.storage import storage
+from logic.start_factory import start_factory
 
 class TestSettings(unittest.TestCase):
+
+
+    def test_setUp(self):
+        # Подготавливаем данные для теста
+        self.data = [
+            nomenclature_model("Мука пшеничная", None, unit_model("кг")),
+            nomenclature_model("Сахар", None, unit_model("кг")),
+            nomenclature_model("Сливочное масло", None, unit_model("г")),
+            nomenclature_model("Яйца", None, unit_model("шт")),
+            nomenclature_model("Ванилин", None, unit_model("г"))
+        ]
+
+    def test_create_receipt(self):
+        # Подготавливаем данные для теста
+        items = {
+            "Мука пшеничная": 100,
+            "Сахар": 80,
+            "Сливочное масло": 70,
+            "Яйца": 1,
+            "Ванилин": 5
+        }
+        name = "Тестовый рецепт"
+        comments = "Это тестовый рецепт"
+
+        # Вызываем функцию, которую тестируем
+        recipe = recipt_model.create_receipt(name, comments, items, self.data)
+
+        # Проверяем, что рецепт создан успешно
+        self.assertIsInstance(recipe, recipt_model)
+        self.assertEqual(recipe.name, name)
+        self.assertEqual(recipe.comments, comments)
+        self.assertEqual(len(recipe.rows), len(items))
 
     def test_check_create_manager(self):
         manager1 = settings_manager()
@@ -107,7 +144,42 @@ class TestSettings(unittest.TestCase):
         # Проверка выброса исключения при передаче некорректного аргумента в метод opener
         man = settings_manager()
         with self.assertRaises(Exception):
-            man.opener(123)
+            man.opener("123")
+
+    def test_check_factory(self):
+        unit = unit_model.create_killogram()
+        assert unit is not None
+
+
+    def test_check_create_receipts(self):
+        items = start_factory.create_nomenclatures()
+        assert len(items) > 0
+
+    def test_check_create_nomenclatures(self):
+        items = start_factory.create_nomenclatures()
+        assert len(items) > 0
+
+    def test_check_create_units(self):
+        items = start_factory.create_units()
+        assert len(items) > 0
+
+
+    def test_check_create_groups(self):
+
+        items = start_factory.create_groups()
+
+        assert len(items) > 0
+
+
+    def test_check_start_factor(self):
+
+        manager = settings_manager()
+        factory = start_factory(manager.settings)
+        result = factory.create()
+        if manager.settings.is_first_start == True:
+            assert result == True
+            assert not factory.storage is None
+            assert storage.nomenclature_key in factory.storage.data
 
 if __name__ == "__main__":
     unittest.main()
