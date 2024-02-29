@@ -1,89 +1,112 @@
 import os
 import json
 import uuid
-from settings import settings
+
+from src.settings import settings
+from src.errors import error_proxy, exception_proxy
+
 
 class settings_manager(object):
-    __file_name = "../res/settings.json"
-    __unique_number = 1
-    __data = {}
-    __settings = settings()
+    # Наименование файла по умолчанию
+    __settings_file_name = "settings.json"
+    # Словарь с исходными данными
+    __data = None
+    # Внутренний уникальный номер
+    __uniqueNumber = None
+    # Данные с настройками
+    __settings = None
+    # Описание ошибок
+    __error = error_proxy()
 
-    # Функция для создания экземляра класса и контроль, того, что у нас он будет только один
     def __new__(cls):
         if not hasattr(cls, 'instance'):
             cls.instance = super(settings_manager, cls).__new__(cls)
         return cls.instance
 
+    def __init__(self):
+        if self.__uniqueNumber is None:
+            self.__uniqueNumber = uuid.uuid4()
+            self.opener(self.__settings_file_name)
 
-    def __init__(self) -> None:
-        self.__unique_number = uuid.uuid4()
+            # После загрузки создаем объект класса settings
+            self.__settings = settings()
+            self.__load()
 
-    # Свойство для получения уникального номера (значения) в формате строки
     @property
-    def unique_number(self) -> str:
-        return str(self.__unique_number.hex)
+    def unique_number(self):
+        return self.__uniqueNumber
 
-    # Функция для открытия файла с настройками по указанному пути
-    # Идет проверка на ошибки при подаче аргумента,
-    # а потом все уходит в приватную функцию open
-    def opener(self, file_name: str) -> bool:
-        if not isinstance(file_name, str):
-            raise Exception("ERROR: неправильный аргумент!")
-
-        if file_name == "":
-            raise Exception("ERROR: Неправильный аргумент!!")
-
-        self.__file_name = file_name.strip()
+    def __open(self):
+        """
+            Открыть файл с настройками
+        """
+        file_path = os.path.split(__file__)
+        settings_file = "%s/%s" % (file_path[0], self.__settings_file_name)
+        if not os.path.exists(settings_file):
+            self.__error.set_error(Exception("ERROR: Невозможно загрузить настройки! Не найден файл %s", settings_file))
 
         try:
-            self.__open()
+            with open(settings_file, "r") as read_file:
+                self.__data = json.load(read_file)
         except:
-            return False
+            self.__error.set_error(Exception("ERROR: Невозможно загрузить настройки! Не найден файл %s", settings_file))
 
-        return True
+    def opener(self, file_name: str):
+        """
+            Открыть файл с настройками
+        Args:
+            file_name (str):
+        """
+        exception_proxy.is_valide(file_name, str)
 
-    # Функция для получения словаря с настройками считанными из файла с настройками
+        self._settings_file_name = file_name
+        self.__open()
+        self.__load()
+
+    def __load(self):
+        """
+            Private: Загрузить словарь в объект
+        """
+
+        if len(self.__data) == 0:
+            return
+
+        # Список полей от типа назначения
+        fields = list(filter(lambda x: not x.startswith("_"), dir(self.__settings.__class__)))
+
+        # Заполняем свойства
+        for field in fields:
+            keys = list(filter(lambda x: x == field, self.__data.keys()))
+            if len(keys) != 0:
+                value = self.__data[field]
+
+                # Если обычное свойство - заполняем.
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    setattr(self.__settings, field, value)
+
     @property
-    def data(self) -> {}:
+    def settings(self) -> settings:
+        """
+            Текущие настройки в приложении
+        Returns:
+            settings: _
+        """
+        return self.__settings
+
+    @property
+    def data(self):
+        """
+            Словарь, который содержит данные из настроек
+        Returns:
+            dict:
+        """
         return self.__data
 
-    # Приватная функция для создания экземляра класса settings
-    def __convert(self):
-
-        #Если данных вообще нет
-        if len(self.__data) == 0:
-            raise Exception("Проблема с созданием экземпляра класса settings")
-
-        fields = self.__settings.get_data_keys
-
-        # если данные есть, но они неполные, то мы счтиатем то что есть, но выкинем Exception
-        if len(self.__data) < len(fields):
-            for field in fields:
-                if field in self.__data:
-                    value = self.__data[field]
-                    setattr(self.__settings, field, value)
-            raise Exception("Входных данных меньше ожидаемых, некоторые поля пустые")
-
-        # Иначе мы просто заполняем все поля без лишних логических сравнений в if
-        else:
-            for field in fields:
-                value = self.__data[field]
-                setattr(self.__settings, field, value)
-
-    # Приватное свойство для отрытия файла
     @property
-    def __open(self):
-        # Используем os.path для построения путей
-        file_path = os.path.split(__file__)
-        settings_file = "%s/%s" % (file_path[0], self.__file_name)
-        if not os.path.exists(settings_file):
-            raise Exception(
-                "ERROR: Неправильный аргумент",
-                settings_file)
-
-        with open(settings_file, "r") as read_file:
-            self.__data = json.load(read_file)
-            self.__convert()
-            print(self.__data)
-
+    def error(self) -> error_proxy:
+        """
+            Текущая информация об ошибке
+        Returns:
+            error_proxy:
+        """
+        return self.__error
