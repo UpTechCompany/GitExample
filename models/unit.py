@@ -76,6 +76,6 @@ class unit_model(reference):
         return item
 
     @staticmethod
-    def create_unit_shtuki():
+    def create_unit_piece():
         item = unit_model('шт', None, 1)
         return item

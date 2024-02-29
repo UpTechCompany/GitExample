@@ -26,11 +26,15 @@ class settings_manager(object):
     def __init__(self):
         if self.__uniqueNumber is None:
             self.__uniqueNumber = uuid.uuid4()
-            self.open(self.__settings_file_name)
+            self.opener(self.__settings_file_name)
 
             # После загрузки создаем объект класса settings
             self.__settings = settings()
             self.__load()
+
+    @property
+    def unique_number(self):
+        return self.__uniqueNumber
 
     def __open(self):
         """
@@ -47,7 +51,7 @@ class settings_manager(object):
         except:
             self.__error.set_error(Exception("ERROR: Невозможно загрузить настройки! Не найден файл %s", settings_file))
 
-    def open(self, file_name: str):
+    def opener(self, file_name: str):
         """
             Открыть файл с настройками
         Args:

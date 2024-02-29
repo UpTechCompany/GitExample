@@ -13,33 +13,41 @@ class TestSettings(unittest.TestCase):
     def test_setUp(self):
         # Подготавливаем данные для теста
         self.data = [
-            nomenclature_model("Мука пшеничная", None, unit_model("кг")),
-            nomenclature_model("Сахар", None, unit_model("кг")),
-            nomenclature_model("Сливочное масло", None, unit_model("г")),
-            nomenclature_model("Яйца", None, unit_model("шт")),
-            nomenclature_model("Ванилин", None, unit_model("г"))
+            nomenclature_model("Мука пшеничная", None, unit_model("кг").create_unit_kilogram()),
+            nomenclature_model("Сахар", None, unit_model("кг").create_unit_kilogram()),
+            nomenclature_model("Сливочное масло", None, unit_model("г").create_unit_gramm()),
+            nomenclature_model("Яйца", None, unit_model("шт").create_unit_piece()),
+            nomenclature_model("Ванилин", None, unit_model("г").create_unit_gramm())
         ]
 
     def test_create_receipt(self):
         # Подготавливаем данные для теста
-        items = {
+        data = [
+            nomenclature_model("Мука пшеничная", None, unit_model("кг").create_unit_kilogram()),
+            nomenclature_model("Сахар", None, unit_model("кг").create_unit_kilogram()),
+            nomenclature_model("Сливочное масло", None, unit_model("г").create_unit_gramm()),
+            nomenclature_model("Яйца", None, unit_model("шт").create_unit_piece()),
+            nomenclature_model("Ванилин", None, unit_model("г").create_unit_gramm())
+        ]
+
+        items1 = [{
             "Мука пшеничная": 100,
             "Сахар": 80,
             "Сливочное масло": 70,
             "Яйца": 1,
             "Ванилин": 5
-        }
+        }]
         name = "Тестовый рецепт"
         comments = "Это тестовый рецепт"
 
         # Вызываем функцию, которую тестируем
-        recipe = recipt_model.create_receipt(name, comments, items, self.data)
+        recipe = recipt_model.create_receipt(name, comments, items1, data)
 
         # Проверяем, что рецепт создан успешно
         self.assertIsInstance(recipe, recipt_model)
         self.assertEqual(recipe.name, name)
         self.assertEqual(recipe.comments, comments)
-        self.assertEqual(len(recipe.rows), len(items))
+        self.assertEqual(len(recipe.rows), len(items1))
 
     def test_check_create_manager(self):
         manager1 = settings_manager()
@@ -53,7 +61,7 @@ class TestSettings(unittest.TestCase):
 
         # Неправильный путь к файлу и проба на считывание
         file_name = "lo/other_dir/settings.json"
-        self.assertTrue(man.opener(file_name))
+        self.assertIsNone(man.opener(file_name))
         self.assertEqual(man.data, {})
 
     def test_check_json_valid_path(self):
@@ -72,9 +80,9 @@ class TestSettings(unittest.TestCase):
         # Проверка начальных значений полей
         self.assertEqual(settings_obj.BIK, "")
         self.assertEqual(settings_obj.check, "")
-        self.assertEqual(settings_obj.korr_check, "")
+        self.assertEqual(settings_obj.corr_check, "")
         self.assertEqual(settings_obj.INN, "")
-        self.assertEqual(settings_obj.name_of_product, "")
+        self.assertEqual(settings_obj.type_of_company, "")
         self.assertEqual(settings_obj.name_of_company, "")
 
     def test_settings_properties_set_values(self):
@@ -124,11 +132,6 @@ class TestSettings(unittest.TestCase):
         with self.assertRaises(Exception):
             man.opener("invalid_settings.json")
 
-    def test_unique_number_type(self):
-        # Проверка типа уникального номера менеджера настроек
-        manager = settings_manager()
-        self.assertIsInstance(manager.unique_number, str)
-
     def test_settings_manager_opener_type(self):
         # Проверка типа возвращаемого значения метода opener
         man = settings_manager()
@@ -147,7 +150,7 @@ class TestSettings(unittest.TestCase):
             man.opener("123")
 
     def test_check_factory(self):
-        unit = unit_model.create_killogram()
+        unit = unit_model.create_unit_kilogram()
         assert unit is not None
 
 

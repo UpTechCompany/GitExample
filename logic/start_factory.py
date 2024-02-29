@@ -37,14 +37,14 @@ class start_factory:
         items.append(unit_model.create_unit_kilogram())
         items.append(unit_model.create_unit_litr())
         items.append(unit_model.create_unit_millilitr())
-        items.append(unit_model.create_unit_shtuki())
+        items.append(unit_model.create_unit_piece())
 
         return items
 
     @staticmethod
     def create_nomenclatures():
         group = group_model.create_default_group()
-        items = [{"Мука пшеничная": "кг",
+        items = {"Мука пшеничная": "кг",
                  "Сахар": "кг",
                  "Сливочное масло": "кг",
                  "Корица": "гр",
@@ -62,27 +62,24 @@ class start_factory:
                  "Лимонный сок": "л",
                  "Горчица дижонская": "гр",
                  "Сахарная пудра": "гр",
-                 "Ванилиин": "гр"}]
+                 "Ванилиин": "гр"}
 
         units = reference.create_dictionary(start_factory.create_units())
 
         result = []
         for position in items:
-            __list = list(position.items())
+            __list = [position, items[position]]
             if len(__list) < 1:
                 raise operation_exception(
                     "Невозможно сформировать элементы номенклатуры! Некорректный список исходных элементов!")
 
-            tuple = list(__list)[0]
+            name = __list[0]
+            unit_name = __list[1]
 
-            if len(tuple) < 2:
-                raise operation_exception("Невозможно сформировать элемент номенклатуры. Длина кортежа не корректна!")
-
-            name = tuple[0]
-            unit_name = tuple[1]
 
             item = nomenclature_model(name, group, units[unit_name])
             result.append(item)
+
 
         return result
 
@@ -97,7 +94,7 @@ class start_factory:
         result = []
         data = start_factory.create_nomenclatures()
 
-        # Вафли хрустящие в вафельнице
+        #Вафли хрустящие в вафельнице
         items = [{"Мука пшеничная": 100,
                  "Сахар": 80,
                  "Сливочное масло": 70,

@@ -22,6 +22,15 @@ class reference(ABC):
         exception_proxy.is_valide(value.strip(), str, 50)
         self.__name = value.strip()
 
+    @staticmethod
+    def create_dictionary(items: list):
+        exception_proxy.is_valide(items, list)
+        result = {}
+        for position in items:
+            result[position.name] = position
+
+        return result
+
     @property
     def description(self):
         return self.__description

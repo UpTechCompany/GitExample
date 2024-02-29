@@ -7,8 +7,6 @@ class nomenclature_model(reference):
     __unit = None
 
     def __init__(self, name: str, group: reference = None, unit: reference = None):
-        exception_proxy.is_valide(group, reference)
-        exception_proxy.is_valide(unit, reference)
         self.error = exception_proxy()
         self.__group = group
         self.__unit = unit

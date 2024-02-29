@@ -42,12 +42,9 @@ class recipt_model(reference):
         if not items:
             raise ValueError(f"Некорректно передан параметр {items}. Список пуст!")
 
-        nomenclatures = {}
-        for position in data:
-            nomenclatures[position.name] = position
+        nomenclatures = reference.create_dictionary(data)
 
-
-        receipt = recipt_row_model(name)
+        result = []
 
         for position in items:
             if not position:
@@ -58,15 +55,17 @@ class recipt_model(reference):
             if not nomenclature_name or not size:
                 raise ValueError("Невозможно сформировать элемент рецепта. Длина кортежа не корректна!")
 
+            nomenclature = nomenclatures[nomenclature_name]
+
             if nomenclature_name not in nomenclatures:
                 raise ValueError(f"Некоректно передан список. Не найдена номенклатура {nomenclature_name}!")
 
-            nomenclature = nomenclatures[nomenclature_name]
+
 
             unit = nomenclature.unit.base_unit if nomenclature.unit.base_unit is not None else nomenclature.unit
 
             # Создаем запись в рецепте
             row = recipt_row_model(nomenclature, size, unit)
-            receipt.add(row)
+            result.append(row)
 
-        return receipt
+        return result

@@ -1,4 +1,4 @@
-from errors import error_proxy
+from src.errors import error_proxy
 class settings:
     def __init__(self):
         self.__name = ""
@@ -10,66 +10,66 @@ class settings:
         self.__first_start = True
 
     @property
-    def name(self):
+    def name_of_company(self):
         return self.__name
 
-    @name.setter
-    def name(self, value: str):
+    @name_of_company.setter
+    def name_of_company(self, value: str):
         if not isinstance(value.strip(), str):
             error_proxy.set_error(Exception("Некорректное наименование!"))
 
         self.__name = value.strip()
 
     @property
-    def inn(self):
+    def INN(self):
         return self.__inn
 
-    @inn.setter
-    def inn(self, value: str):
+    @INN.setter
+    def INN(self, value: str):
         if not isinstance(value.strip(), str) or len(value.strip()) != 12:
             error_proxy.set_error(Exception("Некорректный ИНН!"))
 
         self.__inn = value.strip()
 
     @property
-    def account(self):
+    def check(self):
         return self.__check
 
-    @account.setter
-    def account(self, value: str):
+    @check.setter
+    def check(self, value: str):
         if not isinstance(value.strip(), str) or len(value.strip()) != 11:
             error_proxy.set_error(Exception("Некорректный счет!"))
 
         self.__check = value.strip()
 
     @property
-    def correspondent_account(self):
+    def corr_check(self):
         return self.__corr_check
 
-    @correspondent_account.setter
-    def correspondent_account(self, value: str):
+    @corr_check.setter
+    def corr_check(self, value: str):
         if not isinstance(value.strip(), str) or len(value.strip()) != 11:
             error_proxy.set_error(Exception("Некорректный корреспондентский счет!"))
 
         self.__corr_check = value.strip()
 
     @property
-    def bik(self):
+    def BIK(self):
         return self.__bik
 
-    @bik.setter
-    def bik(self, value: str):
+    @BIK.setter
+    def BIK(self, value: str):
         if not isinstance(value.strip(), str) or len(value.strip()) != 9:
             error_proxy.set_error(Exception("Некорректный БИК!"))
 
         self.__bik = value.strip()
 
     @property
-    def ownership_type(self):
+    def type_of_company(self):
         return self.__type_of_company
 
-    @ownership_type.setter
-    def ownership_type(self, value: str):
+    @type_of_company.setter
+    def type_of_company(self, value: str):
         if not isinstance(value.strip(), str) or len(value.strip()) != 5:
             error_proxy.set_error(Exception("Некорректный вид собственности!"))
 
