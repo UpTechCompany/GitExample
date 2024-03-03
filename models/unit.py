@@ -12,6 +12,7 @@ class unit_model(reference):
     # Коэффициент пересчета к базовой единице измерения
     __coefficient: int = 1
 
+
     def __init__(self, name: str, base_unit: reference = None, coefficient: int = 1):
         super().__init__(name)
 
@@ -20,6 +21,8 @@ class unit_model(reference):
 
         if coefficient != 1:
             self.coefficient = coefficient
+
+
 
     @property
     def base_unit(self):
