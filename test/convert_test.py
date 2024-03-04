@@ -1,9 +1,9 @@
-from logic.convert import convert
+from logic.data_presentation import convert
 from storage.storage import storage
 from models.unit import unit_model
 from models.nomenclature import nomenclature_model
 from src.settings_manager import settings_manager
-from logic.formats.convert_csv import csv_convert
+from logic.formats.data_csv import csv_convert
 import unittest
 
 class TestSettings(unittest.TestCase):

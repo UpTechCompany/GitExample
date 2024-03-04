@@ -75,3 +75,11 @@ class convert(ABC):
         :return: dict
         """
         return self.__data
+
+    def get_class_attributes(self, obj):
+        """
+        Получает список имен атрибутов класса
+        """
+        if obj is None:
+            return []
+        return [attr for attr in vars(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__")]

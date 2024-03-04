@@ -1,4 +1,4 @@
-from logic.convert import convert
+from logic.data_presentation import convert
 
 class csv_convert(convert):
 
@@ -20,8 +20,4 @@ class csv_convert(convert):
 
         return result
 
-    def get_class_attributes(self, obj):
-        """
-        Получает список имен атрибутов класса
-        """
-        return [attr for attr in vars(obj) if not callable(getattr(obj, attr)) and not attr.startswith("__")]
+
