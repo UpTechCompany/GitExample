@@ -1,6 +1,6 @@
 from src.reference import reference
 from src.errors import exception_proxy, argument_exception
-
+import datetime
 
 #
 # Модель единицы измерения для номенклатуры
@@ -82,3 +82,6 @@ class unit_model(reference):
     def create_unit_piece():
         item = unit_model('шт', None, 1)
         return item
+
+    def period(self):
+        return datetime.datetime.now()

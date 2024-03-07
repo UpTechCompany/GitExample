@@ -5,7 +5,7 @@ from models.nomenclature import nomenclature_model
 from src.settings_manager import settings_manager
 from logic.formats.data_csv import csv_convert
 import unittest
-
+from logic.formats.data_json import data_json
 class TestSettings(unittest.TestCase):
 
     """Проверить статический метод build класса convert"""
@@ -57,6 +57,18 @@ class TestSettings(unittest.TestCase):
         result = csv.create(storage.nomenclature_key())
         print(result)
         """Будут установлены значения по дефолту, поскольку данная модель не заполнена"""
+
+        assert result is not None
+        assert len(result) > 0
+
+
+    def test_check_reporting_json_build(self):
+        # Подготовка
+        data = {}
+        data[storage.unit_key()] = [unit_model.create_unit_gramm()]
+
+        # Действие
+        result = data_json.build(storage.unit_key())
 
         assert result is not None
         assert len(result) > 0
