@@ -5,7 +5,7 @@ from models.nomenclature import nomenclature_model
 from src.settings_manager import settings_manager
 from logic.formats.data_csv import csv_convert
 import unittest
-from logic.formats.data_json import data_json
+from logic.formats.data_json import json_convert
 class TestSettings(unittest.TestCase):
 
     """Проверить статический метод build класса convert"""
@@ -68,7 +68,7 @@ class TestSettings(unittest.TestCase):
         data[storage.unit_key()] = [unit_model.create_unit_gramm()]
 
         # Действие
-        result = data_json.build(storage.unit_key())
+        result = json_convert.build(storage.unit_key())
 
         assert result is not None
         assert len(result) > 0
