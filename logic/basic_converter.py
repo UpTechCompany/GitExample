@@ -3,7 +3,7 @@ from datetime import datetime
 from src.errors import error_proxy, exception_proxy
 from src.reference import reference
 
-class BasicConverter(convert):
+class BasicConverter():
     def convert(self, obj):
         """
         Реализация метода convert для простых типов данных.
@@ -21,7 +21,7 @@ class BasicConverter(convert):
         else:
             raise ValueError("Unsupported data type for basic conversion")
 
-class DateTimeConverter(convert):
+class DateTimeConverter():
     def convert(self, obj):
         """
         Реализация метода convert для типа данных DateTime.
@@ -37,7 +37,7 @@ class DateTimeConverter(convert):
         else:
             raise ValueError("Unsupported data type for datetime conversion")
 
-class ReferenceConverter(convert):
+class ReferenceConverter():
     def convert(self, obj):
         """
         Реализация метода convert для типа данных Reference.

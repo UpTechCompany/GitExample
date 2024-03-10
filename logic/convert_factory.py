@@ -1,6 +1,7 @@
 from datetime import datetime
 from src.errors import error_proxy, exception_proxy
 from src.reference import reference
+from src.settings_manager import settings_manager
 from logic.basic_converter import BasicConverter, DateTimeConverter, ReferenceConverter
 
 class ConverterFactory:
