@@ -1,59 +1,30 @@
 from logic.data_presentation import convert
 from datetime import datetime
-from src.errors import error_proxy, exception_proxy
-from src.reference import reference
+from logic.data_factory import data_factory
+from src.errors import argument_exception
+class basic_convertor(convert):
 
-class BasicConverter():
-    def convert(self, obj):
-        """
-        Реализация метода convert для простых типов данных.
+    def convert(self, field: str, object) -> dict:
+        super().create(field, object)
 
-        Args:
-            obj: Любой объект.
+        if not isinstance(object, (int, str, bool)):
+            self.error = f"Некорректный тип данных передан для конвертации: {type(object)}"
+            return None
+        try:
+            return {field: object}
+        except Exception as ex:
+            self.error.set_error(ex)
+        return None
 
-        Returns:
-            Словарь в формате ключ - наименование поля, значение - данные поля.
-        """
-        if isinstance(obj, int) or isinstance(obj, float):
-            return {'numeric': obj}
-        elif isinstance(obj, str):
-            return {'str': obj}
+class datetime_convertor(convert):
+    def convert(self, field: str,  obj):
+        if isinstance(obj, datetime.datetime):
+            return {"datetime_value": obj.strftime("%Y-%m-%d %H:%M:%S")}
         else:
-            raise ValueError("Unsupported data type for basic conversion")
+            raise argument_exception("Ошибка типа данных!")
 
-class DateTimeConverter():
-    def convert(self, obj):
-        """
-        Реализация метода convert для типа данных DateTime.
 
-        Args:
-            obj: Любой объект.
-
-        Returns:
-            Словарь в формате ключ - наименование поля, значение - данные поля.
-        """
-        if isinstance(obj, datetime):
-            return {'datetime': obj.strftime('%Y-%m-%d %H:%M:%S')}
-        else:
-            raise ValueError("Unsupported data type for datetime conversion")
-
-class ReferenceConverter():
-    def convert(self, obj):
-        """
-        Реализация метода convert для типа данных Reference.
-
-        Args:
-            obj: Любой объект.
-
-        Returns:
-            Словарь в формате ключ - наименование поля, значение - данные поля.
-        """
-        if isinstance(obj, reference):
-            return {
-                'id': obj.id,
-                'name': obj.name,
-                'description': obj.description,
-                'is_error': obj.is_error
-            }
-        else:
-            raise ValueError("Unsupported data type for reference conversion")
+class reference_convertor(convert):
+    def convert(self, field: str, object) -> dict:
+        factory = data_factory()
+        return factory.create(object)

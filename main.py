@@ -7,7 +7,7 @@ app = Flask(__name__)
 @app.route("/api/report/<storage_key>/<format>", methods=["GET"])
 def get_report(storage_key: str, format: str):
     s = storage.storage()
-    if storage_key not in s.get_all_keys():
+    if storage_key.lower() not in s.get_all_keys():
         response_type = app.response_class(
             response=f"Такого ключа не существует",
             status=500,
@@ -16,7 +16,7 @@ def get_report(storage_key: str, format: str):
 
         return response_type
 
-    if format not in [x.split(".")[0][5:] for x in os.listdir("logic/formats")]:
+    if format.lower() not in [x.split(".")[0][5:] for x in os.listdir("logic/formats")]:
         response_type = app.response_class(
             response=f"Ключ существует, но этот формат экспорта недоступен",
             status=500,
@@ -26,9 +26,9 @@ def get_report(storage_key: str, format: str):
 
 
     response_type = app.response_class(
-        response=f"{data_factory.create(data_factory(), format, 'Сюда нужно передать данные')}",
+        response=f"{storage_key}",
         status=200,
-        mimetype="application/text"
+        mimetype=f"application/{format}"
     )
 
     return response_type

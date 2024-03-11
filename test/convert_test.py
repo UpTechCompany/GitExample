@@ -1,13 +1,15 @@
 from unittest.mock import MagicMock
 import datetime
 from src.reference import reference
-from logic.convert_factory import ConverterFactory
+from logic.convert_factory import convert_factory
 from logic.data_presentation import convert
 from storage.storage import storage
 from models.unit import unit_model
 from models.nomenclature import nomenclature_model
 from src.settings_manager import settings_manager
 from logic.formats.data_csv import csv_convert
+import json
+from logic.start_factory import start_factory
 import unittest
 from logic.formats.data_json import json_convert
 class TestSettings(unittest.TestCase):
@@ -77,52 +79,42 @@ class TestSettings(unittest.TestCase):
         assert result is not None
         assert len(result) > 0
 
-    def test_converter_factory(self):
-        converter_factory = ConverterFactory()
+    def test_check_convert_nomenclature(self):
+        # Подготовка
+        items = start_factory.create_nomenclatures()
+        factory = convert_factory()
+        if len(items) == 0:
+            raise Exception("Список номенклатуры пуст!")
 
-        # Проверяем преобразование числа
-        result_numeric = converter_factory.convert(123)
-        self.assertEqual(result_numeric, {'numeric': 123})
+        item = items[0]
 
-        # Проверяем преобразование строки
-        result_string = converter_factory.convert("Hello")
-        self.assertEqual(result_string, {'str': 'Hello'})
+        # Действие
+        result = factory.convert(item)
 
-        # Проверяем преобразование объекта datetime
-        now = datetime.datetime.now()
-        result_datetime = converter_factory.convert(now)
-        expected_datetime = {'datetime': now.strftime('%Y-%m-%d %H:%M:%S')}
-        self.assertEqual(result_datetime, expected_datetime)
+        # Проверки
+        assert result is not None
+        json_text = json.dumps(result, sort_keys=True, indent=4)
 
-        # Проверяем преобразование объекта reference
-        ref = reference("Test")
-        ref.description = "Test reference"
-        result_reference = converter_factory.convert(ref)
-        expected_reference = {
-            'id': ref.id,
-            'name': ref.name,
-            'description': ref.description,
-            'is_error': ref.is_error
-        }
-        self.assertEqual(result_reference, expected_reference)
+        file = open("nomenclature.json", "w")
+        file.write(json_text)
+        file.close()
 
-    def test_generate_report(self):
-        # Создаем макет ConverterFactory
-        mock_converter_factory = MagicMock(spec=ConverterFactory)
+    def test_check_convert_nomenctalures(self):
+        # Подготовка
+        items = start_factory.create_nomenclatures()
+        factory = convert_factory()
 
-        # Устанавливаем, что возвращается при вызове метода convert
-        mock_converter_factory.convert.return_value = {'key': 'value'}
+        # Действие
+        result = factory.convert(items)
 
-        # Создаем экземпляр json_convert с макетом ConverterFactory и фиктивным _data
-        _data = {}  # Замените на реальные данные, если необходимо
-        json_reporting = json_convert(mock_converter_factory, _data)
+        # Проверки
+        assert result is not None
+        json_text = json.dumps(result, sort_keys=True, indent=4)
 
-        # Генерируем отчет
-        report = json_reporting.create(storage.unit_key(), _data)
+        file = open("nomenclatures.json", "w")
+        file.write(json_text)
+        file.close()
 
-        # Проверяем, что метод convert был вызван с ожидаемым аргументом
-        mock_converter_factory.convert.assert_called_once_with(None)
 
-        # Проверяем, что результат преобразуется в JSON с использованием json.dumps
-        self.assertEqual(report, '{"key": "value"}')
+
 
