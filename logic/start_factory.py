@@ -6,6 +6,8 @@ from models.recipt import recipt_model
 from src.settings import settings
 from storage.storage import storage
 from src.errors import exception_proxy, operation_exception
+from storage.storage_transaction_model import StorageTransactionModel
+from random import randint
 
 
 class start_factory:
@@ -88,6 +90,60 @@ class start_factory:
         items = []
         items.append(group_model.create_default_group())
         return items
+
+    @staticmethod
+    def create_receipts() -> list:
+        _data = nomenclature_data = [
+            {
+                'quantity': 10,
+                'operation_type': 'in',
+                'period': '2024-03',
+                'stock': 'Stock A',
+                'unit': 'Unit A',
+                'date': '2024-03-14',
+                'nomenclature': 'Product A'
+            },
+            {
+                'quantity': 5,
+                'operation_type': 'out',
+                'period': '2024-03',
+                'stock': 'Stock B',
+                'unit': 'Unit B',
+                'date': '2024-03-14',
+                'nomenclature': 'Product B'
+            },
+            {
+                'quantity': 20,
+                'operation_type': 'in',
+                'period': '2024-03',
+                'stock': 'Stock C',
+                'unit': 'Unit C',
+                'date': '2024-03-15',
+                'nomenclature': 'Product C'
+            }
+        ]
+
+        if _data is None:
+            return []
+
+        transactions = []
+
+        for item in _data:
+            transaction = StorageTransactionModel()
+
+            # Set transaction attributes from data
+            transaction.quantity = item.get('quantity')
+            transaction.operation_type = item.get('operation_type')
+            transaction.period = item.get('period')
+            transaction.stock = item.get('stock')
+            transaction.units = item.get('unit')
+            transaction.date = item.get('date')
+            transaction.nomenclature = item.get('nomenclature')
+
+            transactions.append(transaction)
+
+        return transactions
+
 
     @staticmethod
     def create_receipts():

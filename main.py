@@ -1,5 +1,6 @@
 from flask import Flask
 from storage import storage
+from logic.convert_factory import convert_factory
 import os
 from logic.data_factory import data_factory
 app = Flask(__name__)
@@ -26,7 +27,7 @@ def get_report(storage_key: str, format: str):
 
 
     response_type = app.response_class(
-        response=f"{storage_key}",
+        response=f"{storage_key}, {convert_factory()}",
         status=200,
         mimetype=f"application/{format}"
     )

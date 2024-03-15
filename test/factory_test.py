@@ -1,7 +1,7 @@
 from models.unit import unit_model
 from logic.start_factory import start_factory
 from src.settings_manager import settings_manager
-from storage.storage import storage
+from storage.storage_model import StorageModel
 from logic.data_factory import data_factory
 
 import unittest
@@ -31,6 +31,12 @@ class factory_test(unittest.TestCase):
     def test_check_create_nomenclatures(self):
 
         items = start_factory.create_nomenclatures()
+        assert len(items) > 0
+
+    """Проверка создание storage transaction"""
+
+    def test_check_create_trans(self):
+        items = start_factory.create_receipts()
         assert len(items) > 0
 
     "Проверка создание списка единиц измерения"
