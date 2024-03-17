@@ -43,7 +43,7 @@ class convert_factory:
         return result
 
     def __convert_item(self, field: str, source):
-        exception_proxy.validate(field, str)
+        exception_proxy.is_valide(field, str)
         if source is None:
             return {field: None}
 
@@ -59,7 +59,7 @@ class convert_factory:
         return dictionary
 
     def __convert_list(self, field: str, source):
-        exception_proxy.validate(field, str)
+        exception_proxy.is_valide(field, str)
         if not isinstance(source, list):
             return None
 
