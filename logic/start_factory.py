@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from models.group import group_model
 from models.unit import unit_model
 from models.nomenclature import nomenclature_model
@@ -7,7 +9,8 @@ from src.settings import settings
 from storage.storage import storage
 from src.errors import exception_proxy, operation_exception
 from storage.storage_transaction_model import StorageTransactionModel
-from random import randint
+from storage.storage_row_model import storage_row_model
+from random import randint, choice
 
 
 class start_factory:
@@ -200,3 +203,23 @@ class start_factory:
 
         else:
             return True
+
+    @staticmethod
+    def create_journal():
+        transactions = []
+
+        nomenclatures = start_factory.create_nomenclatures()
+        units = reference.create_dictionary(start_factory.create_units())
+
+        for i in range(20):
+            transaction = storage_row_model()
+            transaction.storage_name = "Storage_" + str(i + 1)
+            transaction.nomenclature = choice(nomenclatures)
+            transaction.count = randint(1, 100)
+            transaction.type_tranzaction = choice([True, False])
+            transaction.unit = choice(list(units.values()))
+            transaction.period = datetime.now()
+
+            transactions.append(transaction)
+
+        return transactions

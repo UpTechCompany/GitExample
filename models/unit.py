@@ -83,5 +83,8 @@ class unit_model(reference):
         item = unit_model('шт', None, 1)
         return item
 
-    def period(self):
-        return datetime.datetime.now()
+    @staticmethod
+    def create_unit_package():
+        base = unit_model.create_unit_piece()
+        item = unit_model('уп', base, 1)
+        return item

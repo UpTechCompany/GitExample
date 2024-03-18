@@ -1,7 +1,7 @@
 from src.reference import reference
 from models.nomenclature import nomenclature_model
 from models.unit import unit_model
-from storage.storage_model import StorageModel
+from storage.storage_model import storage_model
 from storage.storage_type_model import StorageTypeModel
 
 class StorageTransactionModel(reference):
