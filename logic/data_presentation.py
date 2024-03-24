@@ -13,7 +13,6 @@ class convert(ABC):
     def __init__(self, _settings: settings, _data: dict) -> None:
 
         """
-
         :param _settings: Настройки
         :param _data: Словарь с данными
         """
