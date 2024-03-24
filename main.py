@@ -2,7 +2,7 @@ from flask import Flask
 from storage import storage
 from logic.convert_factory import convert_factory
 import os
-from logic.data_factory import data_factory
+from storage.StorageService import StorageService
 app = Flask(__name__)
 
 @app.route("/api/report/<storage_key>/<format>", methods=["GET"])
@@ -33,6 +33,21 @@ def get_report(storage_key: str, format: str):
     )
 
     return response_type
+
+    @app.route("/api/storage/<nomenclature_id>/turns", methods=["GET"])
+    def get_turns(nomenclature_id: str):
+        storage_service = StorageService()
+        turns = storage_service.get_turns_by_nomenclature(nomenclature_id)
+        # Преобразование оборотов в нужный формат и возврат
+
+    @app.route("/api/storage/<receipt_id>/debits", methods=["GET"])
+    def get_debits(receipt_id: str):
+        storage_service = StorageService()
+        debits = storage_service.get_debits_by_receipt(receipt_id)
+        # Преобразование списания в нужный формат и возврат
+
+    # Дополнительные изменения для второй задачи в storage_prototype.py и storage_service.py
+
 
 
 if __name__ == "__main__":
