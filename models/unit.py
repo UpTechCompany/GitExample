@@ -1,6 +1,6 @@
 from src.reference import reference
 from src.errors import exception_proxy, argument_exception
-
+import datetime
 
 #
 # Модель единицы измерения для номенклатуры
@@ -81,4 +81,10 @@ class unit_model(reference):
     @staticmethod
     def create_unit_piece():
         item = unit_model('шт', None, 1)
+        return item
+
+    @staticmethod
+    def create_unit_package():
+        base = unit_model.create_unit_piece()
+        item = unit_model('уп', base, 1)
         return item

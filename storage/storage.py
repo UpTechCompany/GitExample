@@ -25,3 +25,13 @@ class storage:
     @staticmethod
     def receipt_key():
         return "receipts"
+
+    @classmethod
+    def get_all_keys(cls):
+        keys = []
+        methods = [getattr(cls, method) for method in dir(cls) if callable(getattr(cls, method))]
+        for method in methods:
+            if method.__name__.endswith("_key") and callable(method):
+                keys.append(method())
+        return keys
+

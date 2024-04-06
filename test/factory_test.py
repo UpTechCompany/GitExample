@@ -1,7 +1,8 @@
 from models.unit import unit_model
 from logic.start_factory import start_factory
 from src.settings_manager import settings_manager
-from storage.storage import storage
+from storage.storage_model import StorageModel
+from logic.data_factory import data_factory
 
 import unittest
 
@@ -32,6 +33,12 @@ class factory_test(unittest.TestCase):
         items = start_factory.create_nomenclatures()
         assert len(items) > 0
 
+    """Проверка создание storage transaction"""
+
+    def test_check_create_trans(self):
+        items = start_factory.create_receipts()
+        assert len(items) > 0
+
     "Проверка создание списка единиц измерения"
     def test_check_create_units(self):
         items = start_factory.create_units()
@@ -60,3 +67,17 @@ class factory_test(unittest.TestCase):
             assert result == True
             assert not factory.storage is None
             assert storage.nomenclature_key in factory.storage.data
+
+    def test_check_convert_factory_create(self):
+        manager = settings_manager()
+        start = start_factory(manager.settings)
+        start.create()
+        factory = data_factory()
+        key = storage.unit_key()
+
+        result = factory.create("CSV", start.storage.data(key))
+
+        assert result is not None
+
+
+

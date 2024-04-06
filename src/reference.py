@@ -48,6 +48,14 @@ class reference(ABC):
     def is_error(self):
         return self.__error.error != ""
 
+    @staticmethod
+    def create_fields(source) -> list:
+        result = list(filter(lambda x: not x.startswith("_") and not x.startswith("create_"), dir(source)))
+        return result
+
+    def __str__(self) -> str:
+        return self.id
+
 
 
 

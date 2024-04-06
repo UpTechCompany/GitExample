@@ -1,11 +1,17 @@
+from unittest.mock import MagicMock
+import datetime
+from src.reference import reference
+from logic.convert_factory import convert_factory
 from logic.data_presentation import convert
 from storage.storage import storage
 from models.unit import unit_model
 from models.nomenclature import nomenclature_model
 from src.settings_manager import settings_manager
 from logic.formats.data_csv import csv_convert
+import json
+from logic.start_factory import start_factory
 import unittest
-
+from logic.formats.data_json import json_convert
 class TestSettings(unittest.TestCase):
 
     """Проверить статический метод build класса convert"""
@@ -60,3 +66,55 @@ class TestSettings(unittest.TestCase):
 
         assert result is not None
         assert len(result) > 0
+
+
+    def test_check_reporting_json_build(self):
+        # Подготовка
+        data = {}
+        data[storage.unit_key()] = [unit_model.create_unit_gramm()]
+
+        # Действие
+        result = json_convert.build(storage.unit_key())
+
+        assert result is not None
+        assert len(result) > 0
+
+    def test_check_convert_nomenclature(self):
+        # Подготовка
+        items = start_factory.create_nomenclatures()
+        factory = convert_factory()
+        if len(items) == 0:
+            raise Exception("Список номенклатуры пуст!")
+
+        item = items[0]
+
+        # Действие
+        result = factory.convert(item)
+
+        # Проверки
+        assert result is not None
+        json_text = json.dumps(result, sort_keys=True, indent=4)
+
+        file = open("nomenclature.json", "w")
+        file.write(json_text)
+        file.close()
+
+    def test_check_convert_nomenctalures(self):
+        # Подготовка
+        items = start_factory.create_nomenclatures()
+        factory = convert_factory()
+
+        # Действие
+        result = factory.convert(items)
+
+        # Проверки
+        assert result is not None
+        json_text = json.dumps(result, sort_keys=True, indent=4)
+
+        file = open("nomenclatures.json", "w")
+        file.write(json_text)
+        file.close()
+
+
+
+
